@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Response;
 
-class LessonsController extends Controller
+class LessonsController extends ApiController
 {
     /**
      * @var LessonTransformer
@@ -41,9 +41,9 @@ class LessonsController extends Controller
 
         $lessons = Lesson::all();
 
-        return Response::json([
+        return $this->respond([
             'data' => $this->lessonTransformer->transformCollection($lessons->toArray())
-        ], 200);
+        ]);
 
     }
 
@@ -65,7 +65,7 @@ class LessonsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd('store');
     }
 
     /**
@@ -79,16 +79,12 @@ class LessonsController extends Controller
         $lesson = Lesson::find($id);
 
         if ($lesson === null) {
-            return Response::json([
-                'error' => [
-                    'message' => 'Lesson does not exist',
-                ]
-            ], 404);
+            return $this->respondNotFound('Lesson does not exist');
         }
 
-        return Response::json([
+        return $this->respond([
             'data' => $this->lessonTransformer->transform($lesson->toArray())
-        ], 200);
+        ]);
     }
 
     /**
